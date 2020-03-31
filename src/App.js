@@ -1,26 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
+
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  return ( <Welcome/>);
+
+}
+
+function Fancyborder(props){
+	return(
+		<div className="Button">
+			{props.children}
+		</div>
+		)
+}
+
+function Welcome(props){
+	return(
+     <Fancyborder>
+      <h5>Vratnoo testing compostions</h5>
+      <p>Life is all about learning Something New every day!</p>
+     </Fancyborder>
+		)
 }
 
 export default App;
