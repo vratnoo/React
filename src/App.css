@@ -65,15 +65,11 @@
 }
 
 .gridhand{
-	margin: 0.5rem;
-	display: inline-block;
-	transition: 0.3s;
-	opacity: 0;
 	position: absolute;
-	left: 60px;
-
-
-
+    left: -15px;
+    top: 3px;
+    width: 18px;
+    height: 24px;
 }
 .gridhand img{
 	height: 1rem;

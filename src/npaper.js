@@ -52,6 +52,7 @@ function Paper(argument) {
 	const [isDeleted,setDelete]  = useState(false)
 	const [direction,setTop]  = useState({top:null})
 	const [showhandle,setHandle]  =  useState(false)
+	const [handleId,setHandleId]  = useState(null)
 
 	const [list,setList] = useState([
 	{id:1,text:"Untitld",type:"Heading"},
@@ -98,23 +99,7 @@ function Paper(argument) {
 			setList(updatedlist)
 			setEnter(focusid)
 		}
-		/*else if(e.keyCode){
-
-			list.every((item,index)=>{
-				
-			if(item.id==menuId){
-				console.log(item.id,menuId,index)
-				  updatedlist[index].text = e.target.innerText
-
-				return false
-			}
-			return true
-		})
-
-			 console.log(updatedlist)
-			 setList(updatedlist)
-
-		}*/
+		
 
 
 	});
@@ -149,6 +134,15 @@ function Paper(argument) {
 		// console.log(e.target)
 		// console.log(top)
 	});
+
+	const handlemouseover = (e)=>{
+		
+		setHandleId(e.target.id)
+		// console.log(handleId)
+	}
+	const handleMouseLeave = (e)=>{
+		setHandleId(null)
+	}
 	const handleMenuClick  = useCallback((e)=>{
 
 		const type = e.target.dataset.type
@@ -171,12 +165,18 @@ function Paper(argument) {
 	}
 
 	const paper =  list.map((item,index)=>{
-		if()
-		return (<div key={item.id} >
-			<div id={item.id} onClick={handleclick}  className="gridhand"><img src={logo}/></div>
-<div  ref={(elem)=>setref(elem,item.id)} id={item.id} onKeyDown={handleKeyDown}  contentEditable="true" placeholder={item.text} className={"data-block "+item.type}>
+		let gridhand = ""
+		if(handleId!==null && handleId==item.id){
+	 		gridhand = (<div style={{opacity:1}}><div id={item.id} onClick={handleclick}  className="gridhand"><img src={logo}/></div></div>)
+			
+		}
+		return (<div style={{position:'relative'}} onMouseLeave={handleMouseLeave} onMouseOver={handlemouseover} id={item.id} key={item.id} >
+			
+<div  ref={(elem)=>setref(elem,item.id)}  id={item.id} onKeyDown={handleKeyDown}  contentEditable="true" placeholder={item.text} className={"data-block "+item.type}>
 
 </div>
+
+{gridhand}
 
 			</div>)
 	})
