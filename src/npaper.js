@@ -1,5 +1,5 @@
-import React,{useCallback,useState,useRef,useEffect} from 'react'
-import './app.css'
+import React,{useCallback,useState,useRef,useEffect,useLayoutEffect} from 'react'
+import './App.css'
 import logo from './grid.png'
 
 
@@ -21,21 +21,49 @@ function Handle({top,hid,onMenuClick}){
 
 	</div>)
 }
+
+
+//helper function to make focus curser at the end of element
+function setEndOfContenteditable(contentEditableElement)
+{
+    var range,selection;
+    if(document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
+    {
+        range = document.createRange();//Create a range (a range is a like the selection but invisible)
+        range.selectNodeContents(contentEditableElement);//Select the entire contents of the element with the range
+        range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
+        selection = window.getSelection();//get the selection object (allows you to change selection)
+        selection.removeAllRanges();//remove any selections already made
+        selection.addRange(range);//make the range you have just created the visible selection
+    }
+    else if(document.selection)//IE 8 and lower
+    { 
+        range = document.body.createTextRange();//Create a range (a range is a like the selection but invisible)
+        range.moveToElementText(contentEditableElement);//Select the entire contents of the element with the range
+        range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
+        range.select();//Select the range (make it the visible selection
+    }
+}
+
+
 function Paper(argument) {
-	const ref = useRef(null)
-	const [isenter,setEnter]  = useState(false)
+	const ref = useRef({})
+	const [isenter,setEnter]  = useState(null)
+	const [isDeleted,setDelete]  = useState(false)
 	const [direction,setTop]  = useState({top:null})
+	const [showhandle,setHandle]  =  useState(false)
 
 	const [list,setList] = useState([
-	{id:Date.now(),text:"Untitld",type:"Heading"},
+	{id:1,text:"Untitld",type:"Heading"},
 	{id:Date.now(),text:"Write Something Here",type:"Paragraph"}
 		])
+
 	const handleKeyDown =  useCallback((e)=>{
 
 		console.log(e.keyCode)
 		const type = "Paragraph"
 		const menuId = e.target.id
-		const updatedlist = list.slice()
+		let updatedlist = list.slice()
 		const newItem =  {id:Date.now(),text:type+" New Dummy",type:type}
 
 		if(e.keyCode===13){
@@ -53,8 +81,24 @@ function Paper(argument) {
 		})
 		console.log(updatedlist)
 		setList(updatedlist)
-		setEnter(true)
-		}/*else if(e.keyCode){
+		setEnter(newItem.id)
+		}else if(e.target.innerText.length===0 && e.keyCode===8){
+			let focusid = null
+			updatedlist  = updatedlist.filter((item,index)=>{
+				
+				if(item.id==menuId && updatedlist.length>1){
+					focusid  = updatedlist[index-1].id
+					return false
+				}else{
+					return true
+				}
+				
+			})
+			console.log(updatedlist)
+			setList(updatedlist)
+			setEnter(focusid)
+		}
+		/*else if(e.keyCode){
 
 			list.every((item,index)=>{
 				
@@ -75,15 +119,24 @@ function Paper(argument) {
 
 	});
 
+	const setref = (elem,id)=>{
+		ref.current[id] = elem
+		console.log(ref.current)
+
+		}
+
+
+
 	 useEffect(() => {
-    ref.current.focus();
-    console.log(ref.current.parentNode.previousSibling)
-    setEnter(false)
-    return () => {
-    console.log(ref.current.id);
-  }
+	
+    	if(isenter!==null){
+    		// ref.current[isenter].focus()
+    		setEndOfContenteditable(ref.current[isenter])
+    	}
+   
 
   },[isenter]);
+
 
 	const handleclick = useCallback((e)=>{
 		
@@ -118,10 +171,10 @@ function Paper(argument) {
 	}
 
 	const paper =  list.map((item,index)=>{
-
+		if()
 		return (<div key={item.id} >
 			<div id={item.id} onClick={handleclick}  className="gridhand"><img src={logo}/></div>
-<div  ref={ref} id={item.id} onKeyDown={handleKeyDown}  contentEditable="true" placeholder={item.text} className={"data-block "+item.type}>
+<div  ref={(elem)=>setref(elem,item.id)} id={item.id} onKeyDown={handleKeyDown}  contentEditable="true" placeholder={item.text} className={"data-block "+item.type}>
 
 </div>
 

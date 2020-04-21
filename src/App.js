@@ -6,6 +6,7 @@ import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
 // import Basic from './dnd'
 import Paper from './npaper'
+
 function App(){
   return <Paper/>
 }
