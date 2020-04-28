@@ -32,21 +32,32 @@ function Datablock(props) {
 	}
 
 	const paper = list.map((item, index) => {
-		return <div>{elem}<Card item={item} index={index} {...props}/></div>
+		return <div key={item.id}>{elem}<Card item={item} index={index} {...props}/></div>
 	});
 
 	return paper;
 }
 
 function Card(props) {
-	const {item,index,handleId,direction,
+	const {
+	item,
+	index,
+	handleId,
+	direction,
 	handleclick,
 	handleMouseEnter,
 	setref,
-	handleKeyDown} = props
+	handleKeyDown,
+	moveCards,
+	handleChange,
+} = props;
 	//drop
+	const haChange = (e)=>{
+
+		console.log("called handle change")
+	}
 	const ref = useRef(null)
-	const [, drop] = useDrop({
+	const [drop_props, drop] = useDrop({
 		accept:ItemTypes.CARD,
 		drop(item,monitor){
 			const draggedIndex  = item.index
@@ -61,16 +72,18 @@ function Card(props) {
 			
 			if(monitor.getClientOffset().y<verticlemiddle){
 					if(draggedIndex!=hoverdIndex-1){
-				console.log("UPPER HE BAY")
-				moveCards(draggedIndex,hoverdIndex)
+				console.log("UPPER")
+				console.log("droped item")
+				 moveCards(draggedIndex,hoverdIndex)
 				}
 			}else{
 				if(draggedIndex!=hoverdIndex+1){
 				moveCards(draggedIndex,hoverdIndex+1)
-				console.log("Neeche HE BAY")
+				console.log("Neeche")
+				console.log("droped item")
 			}
 			}
-			console.log("droped item")
+			
 			
 			
 			return {name:"dustmit",some:"Something"}
@@ -94,6 +107,7 @@ function Card(props) {
 				ref.current.classList.add("top-hover")
 				
 			}else{
+				console.log("Nihce HE BAY")
 				ref.current.classList.remove("top-hover")
 				ref.current.classList.add("bottom-hover")
 				
@@ -109,7 +123,7 @@ function Card(props) {
 
 	//drag
 	const [{isDragging},drag,preview] = useDrag({
-		item:{id:item.id,type:ItemTypes.CARD,index:item.index},
+		item:{id:item.id,type:ItemTypes.CARD,index:index},
 		begin:(monitor)=>{
 
 		},
@@ -149,13 +163,21 @@ function Card(props) {
 		}
 		drop(ref)
 		drag(ref)
+
+			if(!props.isOver && ref.current){
+		
+		ref.current.classList.remove("bottom-hover")
+		ref.current.classList.remove("top-hover")
+
+	}
 		return (
-			<div ref={ref}>
+			<div ref={ref} className="dragmask">
 				
-				<div style={{ position: "relative" }} onMouseEnter={handleMouseEnter} id={item.id} key={item.id}>
+				<div draggable="false" style={{ position: "relative" }} onMouseEnter={handleMouseEnter} id={item.id} key={item.id}>
 					<div
 						ref={(elem) => setref(elem, item.id)}
 						id={item.id}
+						onInput={handleChange}
 						onKeyDown={handleKeyDown}
 						data-type={item.type}
 						contentEditable="true"

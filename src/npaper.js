@@ -29,9 +29,37 @@ function Paper(argument) {
 		},
 	]);
 
+	const moveCards  = useCallback((draggedindex,hoverindex)=>{
+
+		console.log(draggedindex+"is moved with"+hoverindex)
+		//geting dragged card
+		const draggedcard = list[draggedindex]
+		const cards = list.slice()
+		
+		cards.splice(draggedindex,1)
+		cards.splice(hoverindex,0,draggedcard)
+		setList(cards)
+	})
+
+	const handleChange = useCallback((e) => {
+		console.log(e.target.id)
+		const datablock_id = e.target.id
+		let newlist  = list.slice()
+		newlist.every((item, index) => {
+				if (item.id == datablock_id) {
+					item.text = e.target.innerText
+					return false;
+				}
+				return true;
+				});
+		setList(newlist)
+
+	});
+
 	const handleKeyDown = useCallback((e) => {
-		const type = "Paragraph";
 		const menuId = e.target.id;
+		const type = "Paragraph";
+	
 		let updatedlist = list.slice();
 		let newItem = { id: Date.now(), text: type + " New Dummy", type: type };
 		if (e.target.dataset.type === "Todo") {
@@ -114,6 +142,9 @@ function Paper(argument) {
 		handleKeyDown,
 		isenter,
 		setEnter,
+		moveCards,
+		handleChange
+
 	};
 	const controler = <Controler {...dbprops} />;
 

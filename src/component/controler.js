@@ -13,7 +13,7 @@ function Controler(props) {
 	const { isenter } = props;
 	const setref = (elem, id) => {
 		ref.current[id] = elem;
-		console.log(ref.current);
+		
 	};
 
 	useEffect(() => {
