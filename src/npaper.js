@@ -111,6 +111,9 @@ function Paper(argument) {
 		setHandleId(null);
 		setTop({top:null})
 	};
+	const handleFocus = (e) =>{
+		setTop({top:null})
+	}
 
 	const handleMenuClick = useCallback((e) => {
 		const type = e.target.dataset.type;
@@ -143,7 +146,8 @@ function Paper(argument) {
 		isenter,
 		setEnter,
 		moveCards,
-		handleChange
+		handleChange,
+		handleFocus
 
 	};
 	const controler = <Controler {...dbprops} />;

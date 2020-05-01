@@ -17,6 +17,7 @@ function Datablock(props) {
 	handleMouseEnter,
 	setref,
 	handleKeyDown,
+
 } =  props
 
 	// body...
@@ -50,12 +51,9 @@ function Card(props) {
 	handleKeyDown,
 	moveCards,
 	handleChange,
+	handleFocus
 } = props;
 	//drop
-	const haChange = (e)=>{
-
-		console.log("called handle change")
-	}
 	const ref = useRef(null)
 	const [drop_props, drop] = useDrop({
 		accept:ItemTypes.CARD,
@@ -178,6 +176,7 @@ function Card(props) {
 						ref={(elem) => setref(elem, item.id)}
 						id={item.id}
 						onInput={handleChange}
+						onFocus={handleFocus}
 						onKeyDown={handleKeyDown}
 						data-type={item.type}
 						contentEditable="true"
